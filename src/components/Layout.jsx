@@ -36,18 +36,12 @@ const Layout = () => {
       <aside className="sidebar">
         <div className="sidebar-logo">
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <svg width="42" height="42" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ filter: 'drop-shadow(0px 4px 10px rgba(55, 114, 255, 0.25))' }}>
-              <rect width="100" height="100" rx="24" fill="url(#logoGrad)" />
-              {/* Sleek, stylized A representing AMaster */}
-              <path d="M50 22L78 78H62.5L50 51.5L37.5 78H22L50 22Z" fill="white" />
-              {/* Mathematics peak dot or AI core */}
-              <circle cx="50" cy="44" r="7" fill="#FFA800" />
-              <defs>
-                <linearGradient id="logoGrad" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
-                  <stop stopColor="var(--primary)" />
-                  <stop offset="1" stopColor="#6C97FF" />
-                </linearGradient>
-              </defs>
+            <svg width="42" height="42" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ filter: 'drop-shadow(0px 4px 12px rgba(55, 114, 255, 0.3))' }}>
+              {/* Lowercase m */}
+              <path d="M 22,58 L 22,40 C 22,26 42,26 42,40 L 42,58" stroke="var(--primary)" strokeWidth="11" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M 42,40 C 42,26 62,26 62,40 L 62,58" stroke="var(--primary)" strokeWidth="11" strokeLinecap="round" strokeLinejoin="round" />
+              {/* Underneath hook */}
+              <path d="M 42,62 C 42,78 72,78 72,56" stroke="var(--primary)" strokeWidth="11" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </div>
         </div>
@@ -82,8 +76,9 @@ const Layout = () => {
       <main className="main-content">
         <header className="header">
           <div className="header-left">
-            <div style={{ fontSize: '1.25rem', fontWeight: '700', color: 'var(--text-main)', whiteSpace: 'nowrap' }}>
-              에이마스터 AI
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <span style={{ fontSize: '1.4rem', fontWeight: '800', color: 'var(--text-main)', letterSpacing: '-0.03em', fontFamily: "'Outfit', 'Inter', sans-serif" }}>mydemy</span>
+              <span style={{ fontSize: '0.75rem', fontWeight: '600', color: 'var(--primary)', background: 'rgba(55, 114, 255, 0.1)', padding: '0.2rem 0.5rem', borderRadius: '6px', letterSpacing: '0.05em' }}>AI</span>
             </div>
             <button className="btn btn-primary" style={{ padding: '0.5rem 1rem', borderRadius: '8px', fontSize: '0.8125rem', whiteSpace: 'nowrap' }}>
               새 분석 시작 +
@@ -173,7 +168,7 @@ const Layout = () => {
                 style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', cursor: 'pointer' }}
                 onClick={() => setIsProfileOpen(!isProfileOpen)}
               >
-                <img src="https://ui-avatars.com/api/?name=W&background=3772FF&color=fff&rounded=true" alt="Profile" style={{ width: '36px', height: '36px', borderRadius: '50%' }} />
+                <img src="https://ui-avatars.com/api/?name=M&background=3772FF&color=fff&rounded=true" alt="Profile" style={{ width: '36px', height: '36px', borderRadius: '50%' }} />
               </div>
 
               {/* Profile Dropdown */}
@@ -193,7 +188,7 @@ const Layout = () => {
                 }}>
                   <div style={{ borderBottom: '1px solid var(--border)', paddingBottom: '0.75rem' }}>
                     <h4 style={{ fontSize: '0.9375rem', fontWeight: '700', margin: 0, color: 'var(--text-main)' }}>김태현 원장님</h4>
-                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>에이마스터 AI 학원</span>
+                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>마이데미 AI 학원</span>
                   </div>
                   
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.8125rem', color: 'var(--text-muted)' }}>
@@ -203,7 +198,7 @@ const Layout = () => {
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                       <span>아이디:</span>
-                      <span style={{ fontWeight: '600', color: 'var(--text-main)' }}>aimaster_head</span>
+                      <span style={{ fontWeight: '600', color: 'var(--text-main)' }}>mydemy_head</span>
                     </div>
                   </div>
                 </div>
