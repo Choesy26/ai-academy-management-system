@@ -70,7 +70,7 @@ const Dashboard = () => {
       </div>
 
       <div className="grid grid-cols-3 gap-6">
-        <div className="card" style={{ gridColumn: 'span 2' }}>
+        <div className="card col-span-2-lg">
           <div className="flex justify-between items-center" style={{ marginBottom: '1.5rem' }}>
             <h2 style={{ fontSize: '1.25rem', fontWeight: '700', letterSpacing: '-0.02em' }}>최근 분석된 시험지</h2>
             <button style={{ color: 'var(--primary)', fontSize: '0.875rem', fontWeight: '600', display: 'flex', alignItems: 'center' }}>
@@ -85,9 +85,9 @@ const Dashboard = () => {
               </div>
             ) : recentAnalyses.length > 0 ? (
               recentAnalyses.map((item, i) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem', border: '1px solid var(--border)', borderRadius: '12px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                    <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#F1F5F9', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '700', color: 'var(--primary)' }}>
+                <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem', border: '1px solid var(--border)', borderRadius: '12px', flexWrap: 'wrap', gap: '1rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', minWidth: '200px' }}>
+                    <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#F1F5F9', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '700', color: 'var(--primary)', flexShrink: 0 }}>
                       {item.name ? item.name[0] : 'S'}
                     </div>
                     <div>
@@ -96,7 +96,7 @@ const Dashboard = () => {
                     </div>
                   </div>
                   
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap', justifyContent: 'flex-end', flexGrow: 1 }}>
                     <div style={{ textAlign: 'right' }}>
                       <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.125rem', fontWeight: '500' }}>발견된 약점</p>
                       <span style={{ display: 'inline-block', padding: '0.125rem 0.625rem', background: '#FEE2E2', color: '#DC2626', borderRadius: '6px', fontSize: '0.75rem', fontWeight: '600' }}>
@@ -148,7 +148,7 @@ const Dashboard = () => {
       {/* Analysis Detail Modal */}
       {selectedAnalysis && (
         <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100, backdropFilter: 'blur(4px)' }}>
-          <div className="card animate-fade-in" style={{ width: '100%', maxWidth: '600px', padding: '0', overflow: 'hidden' }}>
+          <div className="card animate-fade-in responsive-modal-content" style={{ width: '100%', maxWidth: '600px', padding: '0', overflow: 'hidden' }}>
             <div style={{ padding: '1.5rem', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#FAFCFF' }}>
               <h2 style={{ fontSize: '1.25rem', fontWeight: '700', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                 <FileCheck size={20} color="var(--primary)" /> 분석 상세 결과
