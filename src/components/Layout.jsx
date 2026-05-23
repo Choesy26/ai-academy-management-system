@@ -36,12 +36,10 @@ const Layout = () => {
       <aside className="sidebar">
         <div className="sidebar-logo">
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <svg width="42" height="42" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ filter: 'drop-shadow(0px 4px 12px rgba(55, 114, 255, 0.3))' }}>
-              {/* Lowercase m */}
-              <path d="M 22,58 L 22,40 C 22,26 42,26 42,40 L 42,58" stroke="var(--primary)" strokeWidth="11" strokeLinecap="round" strokeLinejoin="round" />
-              <path d="M 42,40 C 42,26 62,26 62,40 L 62,58" stroke="var(--primary)" strokeWidth="11" strokeLinecap="round" strokeLinejoin="round" />
-              {/* Underneath hook */}
-              <path d="M 42,62 C 42,78 72,78 72,56" stroke="var(--primary)" strokeWidth="11" strokeLinecap="round" strokeLinejoin="round" />
+            <svg width="44" height="44" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ filter: 'drop-shadow(0px 4px 12px rgba(55, 114, 255, 0.35))' }}>
+              {/* Elegant Cursive m + y connected path */}
+              <path d="M 18,48 L 18,36 C 18,22 36,22 36,36 L 36,45 M 36,36 C 36,18 54,18 54,36 L 54,48 C 54,60 82,60 82,34" stroke="var(--primary)" strokeWidth="9.5" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M 82,28 L 82,66 C 82,82 52,82 52,70" stroke="var(--primary)" strokeWidth="9.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </div>
         </div>
