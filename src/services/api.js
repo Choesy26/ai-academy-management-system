@@ -231,7 +231,11 @@ export const getRecentAnalyses = async () => {
         console.warn('Error fetching analyses from Supabase, falling back to mock:', error);
         return MOCK_ANALYSES;
       }
-      return data;
+      return data.map(item => ({
+        ...item,
+        name: item.students?.name || '학생',
+        school: item.school || item.students?.school || '학교미상'
+      }));
     } catch (e) {
       console.warn('Supabase analyses request failed, falling back to mock:', e);
       return MOCK_ANALYSES;
@@ -239,6 +243,53 @@ export const getRecentAnalyses = async () => {
   }
   await delay(500);
   return MOCK_ANALYSES;
+};
+
+export const addAnalysis = async (analysisData) => {
+  if (hasSupabaseConfig) {
+    try {
+      const { data, error } = await supabase
+        .from('analyses')
+        .insert([{
+          student_id: Number(analysisData.student_id),
+          school: analysisData.school,
+          test: analysisData.test,
+          date: analysisData.date || new Date().toISOString().split('T')[0],
+          score: Number(analysisData.score),
+          weakness: analysisData.weakness
+        }])
+        .select();
+        
+      if (error) {
+        console.error('Error inserting analysis into Supabase:', error);
+        throw error;
+      }
+      return data[0];
+    } catch (e) {
+      console.error('Supabase insert analysis failed:', e);
+      throw e;
+    }
+  }
+  // Mock Fallback
+  await delay(300);
+  const newAnalysis = {
+    id: Date.now(),
+    student_id: Number(analysisData.student_id),
+    name: '학생',
+    school: analysisData.school,
+    test: analysisData.test,
+    date: analysisData.date || new Date().toISOString().split('T')[0],
+    score: Number(analysisData.score),
+    weakness: analysisData.weakness
+  };
+  
+  const mockStudent = MOCK_STUDENTS.find(s => String(s.id) === String(analysisData.student_id));
+  if (mockStudent) {
+    newAnalysis.name = mockStudent.name;
+  }
+  
+  MOCK_ANALYSES.unshift(newAnalysis);
+  return newAnalysis;
 };
 
 export const getStudentById = async (id) => {

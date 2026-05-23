@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { UploadCloud, CheckCircle, FileSearch, ArrowRight, BookOpen, AlertCircle, Loader2 } from 'lucide-react';
-import { getStudents } from '../services/api';
+import { getStudents, addAnalysis } from '../services/api';
 import { analyzeExamImageAI, hasGeminiConfig } from '../services/gemini';
 
 const Analysis = () => {
@@ -44,6 +44,20 @@ const Analysis = () => {
       if (hasGeminiConfig) {
         try {
           const result = await analyzeExamImageAI(base64Data, mimeType, studentInfo);
+          
+          // Save the real AI analysis to Supabase/Mock memory
+          try {
+            await addAnalysis({
+              student_id: selectedStudent,
+              school: studentInfo.school || '학교미상',
+              test: result.recommendedQuestions?.[0]?.source?.replace(' 유사 변형', '') || '실시간 AI 분석 시험지',
+              score: result.estimatedScore || 0,
+              weakness: result.weaknessTags?.[0] || '개념 분석 필요'
+            });
+          } catch (dbError) {
+            console.error('Failed to save real AI analysis to database:', dbError);
+          }
+
           setAnalysisResult(result);
           setIsRealAI(true);
           setStep(3);
@@ -54,8 +68,8 @@ const Analysis = () => {
       }
 
       // Fallback Simulator if no key or API fails
-      setTimeout(() => {
-        setAnalysisResult({
+      setTimeout(async () => {
+        const mockResult = {
           estimatedScore: 85,
           errorCount: 4,
           analysisSummary: "이차함수와 도형의 넓이를 연계하는 다항식 연산 활용 문제에서 미세한 연산 실수가 여러 군데에서 관찰됩니다. 전체적인 개념의 뼈대는 훌륭하나 고난도 문항에 다가설 때 식을 단순화하는 연습이 핵심적입니다.",
@@ -89,7 +103,22 @@ const Analysis = () => {
               accuracy: "유사도 91%"
             }
           ]
-        });
+        };
+
+        // Also save mock analysis results to Supabase/Mock memory!
+        try {
+          await addAnalysis({
+            student_id: selectedStudent,
+            school: studentInfo.school || '학교미상',
+            test: `${studentInfo.school || '해당 학교'} 2026 1학기 중간고사`,
+            score: mockResult.estimatedScore,
+            weakness: mockResult.weaknessTags[0]
+          });
+        } catch (dbError) {
+          console.error('Failed to save mock analysis to database:', dbError);
+        }
+
+        setAnalysisResult(mockResult);
         setIsRealAI(false);
         setStep(3);
       }, 2500);
