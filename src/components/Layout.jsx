@@ -80,9 +80,6 @@ const Layout = () => {
               <span style={{ fontSize: '1.4rem', fontWeight: '800', color: 'var(--text-main)', letterSpacing: '-0.03em', fontFamily: "'Outfit', 'Inter', sans-serif" }}>mydemy</span>
               <span style={{ fontSize: '0.75rem', fontWeight: '600', color: 'var(--primary)', background: 'rgba(55, 114, 255, 0.1)', padding: '0.2rem 0.5rem', borderRadius: '6px', letterSpacing: '0.05em' }}>AI</span>
             </div>
-            <button className="btn btn-primary" style={{ padding: '0.5rem 1rem', borderRadius: '8px', fontSize: '0.8125rem', whiteSpace: 'nowrap' }}>
-              새 분석 시작 +
-            </button>
           </div>
 
           <div className="header-right">
