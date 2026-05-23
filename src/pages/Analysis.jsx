@@ -12,6 +12,7 @@ const Analysis = () => {
   const [loading, setLoading] = useState(true);
   const [analysisResult, setAnalysisResult] = useState(null);
   const [isRealAI, setIsRealAI] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
 
   useEffect(() => {
     const fetchStudents = async () => {
@@ -29,15 +30,7 @@ const Analysis = () => {
     fetchStudents();
   }, []);
 
-  const handleUpload = (e) => {
-    if (!selectedStudent) {
-      alert("학생을 먼저 선택해주세요.");
-      return;
-    }
-    
-    const file = e.target.files?.[0];
-    if (!file) return;
-
+  const processFile = (file) => {
     setStep(2);
 
     // Read the file as Base64
@@ -105,6 +98,21 @@ const Analysis = () => {
     reader.readAsDataURL(file);
   };
 
+  const handleUpload = (e) => {
+    if (!selectedStudent) {
+      alert("학생을 먼저 선택해주세요.");
+      return;
+    }
+    
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    processFile(file);
+    
+    // Clear the input value so that the same file can be uploaded again
+    e.target.value = '';
+  };
+
   // Find the selected student info for the result screen
   const studentInfo = students.find(s => String(s.id) === String(selectedStudent)) || {};
 
@@ -161,8 +169,44 @@ const Analysis = () => {
           </div>
           
           <div 
-            style={{ border: '2px dashed var(--primary)', borderRadius: 'var(--radius-lg)', padding: '2.5rem 2rem', cursor: 'pointer', background: '#F8FAFC' }}
+            style={{ 
+              border: isDragging ? '2.5px solid var(--primary)' : '2px dashed var(--primary)', 
+              borderRadius: 'var(--radius-lg)', 
+              padding: '2.5rem 2rem', 
+              cursor: 'pointer', 
+              background: isDragging ? 'rgba(55, 114, 255, 0.05)' : '#F8FAFC',
+              transition: 'all 0.2s ease',
+              boxShadow: isDragging ? '0 0 15px rgba(55, 114, 255, 0.15)' : 'none'
+            }}
             onClick={() => fileInputRef.current?.click()}
+            onDragOver={(e) => {
+              e.preventDefault();
+              setIsDragging(true);
+            }}
+            onDragEnter={(e) => {
+              e.preventDefault();
+              setIsDragging(true);
+            }}
+            onDragLeave={(e) => {
+              e.preventDefault();
+              setIsDragging(false);
+            }}
+            onDrop={(e) => {
+              e.preventDefault();
+              setIsDragging(false);
+              if (!selectedStudent) {
+                alert("학생을 먼저 선택해주세요.");
+                return;
+              }
+              const file = e.dataTransfer.files?.[0];
+              if (file) {
+                if (file.type.startsWith('image/')) {
+                  processFile(file);
+                } else {
+                  alert("이미지 파일(PNG, JPG 등)만 업로드할 수 있습니다.");
+                }
+              }
+            }}
           >
             <p style={{ fontWeight: '600', color: 'var(--primary)', fontSize: '1rem' }}>클릭하여 파일 선택 및 분석 시작</p>
             <p style={{ fontSize: '0.8125rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>또는 이미지를 이곳에 드래그 앤 드롭하세요</p>
