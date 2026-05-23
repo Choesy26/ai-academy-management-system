@@ -13,6 +13,8 @@ const Analysis = () => {
   const [analysisResult, setAnalysisResult] = useState(null);
   const [isRealAI, setIsRealAI] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     const fetchStudents = async () => {
@@ -44,20 +46,6 @@ const Analysis = () => {
       if (hasGeminiConfig) {
         try {
           const result = await analyzeExamImageAI(base64Data, mimeType, studentInfo);
-          
-          // Save the real AI analysis to Supabase/Mock memory
-          try {
-            await addAnalysis({
-              student_id: selectedStudent,
-              school: studentInfo.school || '학교미상',
-              test: result.recommendedQuestions?.[0]?.source?.replace(' 유사 변형', '') || '실시간 AI 분석 시험지',
-              score: result.estimatedScore || 0,
-              weakness: result.weaknessTags?.[0] || '개념 분석 필요'
-            });
-          } catch (dbError) {
-            console.error('Failed to save real AI analysis to database:', dbError);
-          }
-
           setAnalysisResult(result);
           setIsRealAI(true);
           setStep(3);
@@ -68,7 +56,7 @@ const Analysis = () => {
       }
 
       // Fallback Simulator if no key or API fails
-      setTimeout(async () => {
+      setTimeout(() => {
         const mockResult = {
           estimatedScore: 85,
           errorCount: 4,
@@ -105,19 +93,6 @@ const Analysis = () => {
           ]
         };
 
-        // Also save mock analysis results to Supabase/Mock memory!
-        try {
-          await addAnalysis({
-            student_id: selectedStudent,
-            school: studentInfo.school || '학교미상',
-            test: `${studentInfo.school || '해당 학교'} 2026 1학기 중간고사`,
-            score: mockResult.estimatedScore,
-            weakness: mockResult.weaknessTags[0]
-          });
-        } catch (dbError) {
-          console.error('Failed to save mock analysis to database:', dbError);
-        }
-
         setAnalysisResult(mockResult);
         setIsRealAI(false);
         setStep(3);
@@ -125,6 +100,37 @@ const Analysis = () => {
     };
 
     reader.readAsDataURL(file);
+  };
+
+  const handleSaveResult = async () => {
+    if (!analysisResult) return;
+    setIsSaving(true);
+    try {
+      const studentInfo = students.find(s => String(s.id) === String(selectedStudent)) || {};
+      
+      let testTitle = '';
+      if (isRealAI) {
+        testTitle = analysisResult.recommendedQuestions?.[0]?.source?.replace(' 유사 변형', '') || '실시간 AI 분석 시험지';
+      } else {
+        testTitle = `${studentInfo.school || '해당 학교'} 2026 1학기 중간고사 (Mock)`;
+      }
+
+      await addAnalysis({
+        student_id: selectedStudent,
+        school: studentInfo.school || '학교미상',
+        test: testTitle,
+        score: analysisResult.estimatedScore || 0,
+        weakness: analysisResult.weaknessTags?.[0] || '개념 분석 필요'
+      });
+      
+      setIsSaved(true);
+      alert("분석 결과가 데이터베이스에 성공적으로 저장되었습니다!");
+    } catch (error) {
+      console.error("Failed to save analysis:", error);
+      alert("결과 저장 중 오류가 발생했습니다. 다시 시도해 주세요.");
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handleUpload = (e) => {
@@ -377,8 +383,22 @@ const Analysis = () => {
                 ))}
               </div>
               
-              <div style={{ marginTop: '2rem', textAlign: 'center' }}>
-                <button className="btn btn-secondary" onClick={() => setStep(1)}>다른 시험지 분석하기</button>
+              <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'center', gap: '1rem' }}>
+                <button className="btn btn-secondary" onClick={() => { setStep(1); setIsSaved(false); }}>다른 시험지 분석하기</button>
+                <button 
+                  className="btn btn-primary" 
+                  disabled={isSaved || isSaving}
+                  onClick={handleSaveResult}
+                  style={{
+                    background: isSaved ? '#10B981' : 'var(--primary)',
+                    borderColor: isSaved ? '#10B981' : 'var(--primary)',
+                    cursor: (isSaved || isSaving) ? 'not-allowed' : 'pointer',
+                    transition: 'all 0.2s ease',
+                    fontWeight: '600'
+                  }}
+                >
+                  {isSaving ? '저장 중...' : isSaved ? '✓ 저장 완료!' : '결과 저장하기'}
+                </button>
               </div>
 
             </div>
