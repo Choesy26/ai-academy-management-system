@@ -236,8 +236,13 @@ export const analyzeExamImageAI = async (base64Data, mimeType, studentInfo) => {
     const data = await response.json();
     const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
     
-    // Parse the JSON safely
-    const parsedData = JSON.parse(rawText.trim());
+    // Parse the JSON safely with robust markdown block stripping
+    let cleanText = rawText.trim();
+    if (cleanText.startsWith('```')) {
+      cleanText = cleanText.replace(/^```(?:json)?\n?/i, '').replace(/```$/i, '').trim();
+    }
+    
+    const parsedData = JSON.parse(cleanText);
     return parsedData;
   } catch (error) {
     console.error('Error in analyzeExamImageAI:', error);
