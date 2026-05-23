@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Users, FileCheck, Target, TrendingUp, ChevronRight, Clock, Loader2, X, AlertCircle } from 'lucide-react';
-import { getRecentAnalyses } from '../services/api';
+import { getRecentAnalyses, getStudents } from '../services/api';
 
 const Dashboard = () => {
   const [recentAnalyses, setRecentAnalyses] = useState([]);
+  const [totalStudents, setTotalStudents] = useState(0);
   const [loading, setLoading] = useState(true);
   
   // Modal state for detailed analysis view
@@ -13,8 +14,12 @@ const Dashboard = () => {
     const fetchDashboardData = async () => {
       setLoading(true);
       try {
-        const analyses = await getRecentAnalyses();
+        const [analyses, students] = await Promise.all([
+          getRecentAnalyses(),
+          getStudents()
+        ]);
         setRecentAnalyses(analyses);
+        setTotalStudents(students.length);
       } catch (e) {
         console.error(e);
       } finally {
@@ -37,7 +42,7 @@ const Dashboard = () => {
           </div>
           <div className="stat-info">
             <h3>총 재원생</h3>
-            <p>128명</p>
+            <p>{loading ? '...' : `${totalStudents}명`}</p>
           </div>
         </div>
         <div className="card stat-card">
